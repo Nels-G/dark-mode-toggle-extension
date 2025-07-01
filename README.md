@@ -2,14 +2,14 @@
 
 Active ou désactive facilement le **mode sombre** sur n’importe quelle page web, d’un simple clic !
 
-## 🚀 Fonctionnalités
+## Fonctionnalités
 
 - Activer/désactiver le thème sombre rapidement
 - Compatible avec tous les sites web
 - Interface simple et intuitive
 - Open source et personnalisable
 
-## 📦 Installation
+##  Installation
 
 1. Clone le repo ou télécharge les fichiers
 2. Va sur `chrome://extensions/`
@@ -17,9 +17,9 @@ Active ou désactive facilement le **mode sombre** sur n’importe quelle page w
 4. Clique sur **Charger l’extension non empaquetée**
 5. Sélectionne le dossier du projet
 
-## 🤝 Contribuer
+##  Contribuer
 
-Tu peux proposer des améliorations, signaler des bugs ou ajouter des fonctionnalités ✨
+Tu peux proposer des améliorations, signaler des bugs ou ajouter des fonctionnalités 
 
 ## 👨‍💻 Développé par
 
