@@ -1,1 +1,24 @@
- 
+.nightswitch-dark {
+  background-color: #111 !important;
+  color: #f0f0f0 !important;
+}
+
+.nightswitch-dark img,
+.nightswitch-dark video,
+.nightswitch-dark iframe {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/* Correction pour les éléments avec background-image */
+.nightswitch-dark {
+  -webkit-filter: invert(1) hue-rotate(180deg);
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.nightswitch-dark img,
+.nightswitch-dark video,
+.nightswitch-dark iframe,
+.nightswitch-dark [style*="background-image"] {
+  -webkit-filter: invert(1) hue-rotate(180deg) !important;
+  filter: invert(1) hue-rotate(180deg) !important;
+}

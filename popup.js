@@ -1,33 +1,60 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   const toggle = document.getElementById('toggle-darkmode');
   const statusText = document.getElementById('status');
 
   // Charger l'état actuel
-  chrome.storage.sync.get(['darkMode'], function(result) {
-    const isDarkMode = result.darkMode || false;
-    toggle.checked = isDarkMode;
-    updateUI(isDarkMode);
-  });
+  const result = await chrome.storage.sync.get(['darkMode']);
+  const isDarkMode = result.darkMode || false;
+  toggle.checked = isDarkMode;
+  updateUI(isDarkMode);
 
   // Écouter les changements
-  toggle.addEventListener('change', function() {
+  toggle.addEventListener('change', async function() {
     const isDarkMode = this.checked;
-    chrome.storage.sync.set({ darkMode: isDarkMode });
-    updateUI(isDarkMode);
     
-    // Mettre à jour l'icône
-    chrome.action.setIcon({
-      path: isDarkMode ? "icons/icon-dark.svg" : "icons/icon.svg"
-    });
+    try {
+      // Sauvegarder l'état
+      await chrome.storage.sync.set({ darkMode: isDarkMode });
+      updateUI(isDarkMode);
+      
+      // Mettre à jour l'icône
+      await updateExtensionIcon(isDarkMode);
 
-    // Envoyer le message à l'onglet actif
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { darkMode: isDarkMode });
-    });
+      // Appliquer le mode sur l'onglet actif
+      await applyDarkModeToCurrentTab(isDarkMode);
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
   });
 
   function updateUI(isDarkMode) {
     statusText.textContent = isDarkMode ? 'Mode sombre activé' : 'Mode clair activé';
     statusText.style.color = isDarkMode ? '#1E2A4A' : '#333';
+  }
+
+  async function updateExtensionIcon(isDark) {
+    const iconPath = isDark ? "icons/icon-dark.svg" : "icons/icon.svg";
+    await chrome.action.setIcon({ path: iconPath });
+  }
+
+  async function applyDarkModeToCurrentTab(isDarkMode) {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    
+    if (!tab) return;
+
+    try {
+      await chrome.tabs.sendMessage(tab.id, { darkMode: isDarkMode });
+    } catch (error) {
+      console.log('Injection du content script...');
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['content.js']
+        });
+        await chrome.tabs.sendMessage(tab.id, { darkMode: isDarkMode });
+      } catch (injectionError) {
+        console.error('Échec de l\'injection:', injectionError);
+      }
+    }
   }
 });
