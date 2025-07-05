@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Fond de cercle (toggle OFF = mode clair) -->
+  <circle cx="64" cy="64" r="60" fill="#FFD600"/> <!-- Jaune -->
+  
+  <!-- Lune (toggle ON = mode sombre) -->
+  <path d="M64 24A40 40 0 1 0 64 104a40 40 0 0 1 0-80z" fill="#1E2A4A"/> <!-- Bleu nuit -->
+  
+  <!-- Optionnel : Petites étoiles -->
+  <circle cx="40" cy="50" r="2" fill="white"/>
+  <circle cx="80" cy="30" r="1.5" fill="white"/>
+  <circle cx="95" cy="70" r="2" fill="white"/>
+</svg>
