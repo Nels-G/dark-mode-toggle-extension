@@ -2,25 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const toggle = document.getElementById('toggle-darkmode');
   const statusText = document.getElementById('status');
 
-  // Fonction pour envoyer le message à l'onglet actif
-  const sendMessageToTab = (isDarkMode) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      // Vérifie qu'un onglet est bien trouvé
-      if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, { darkMode: isDarkMode })
-          .catch(err => console.log("Onglet non disponible", err));
-      }
-    });
-  };
-
-  // Charger l'état initial
-  chrome.storage.sync.get(['darkMode'], (result) => {
+  // Charger l'état actuel
+  chrome.storage.sync.get(['darkMode'], function(result) {
     const isDarkMode = result.darkMode || false;
     toggle.checked = isDarkMode;
     updateUI(isDarkMode);
   });
 
-  // Gestion du toggle
+  // Écouter les changements
   toggle.addEventListener('change', function() {
     const isDarkMode = this.checked;
     chrome.storage.sync.set({ darkMode: isDarkMode });
@@ -31,8 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
       path: isDarkMode ? "icons/icon-dark.svg" : "icons/icon.svg"
     });
 
-    // Envoyer le message
-    sendMessageToTab(isDarkMode);
+    // Envoyer le message à l'onglet actif
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, { darkMode: isDarkMode });
+    });
   });
 
   function updateUI(isDarkMode) {
